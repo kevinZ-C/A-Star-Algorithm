@@ -10,7 +10,7 @@ import a_star
 
 plt.figure(figsize=(5, 5))
 
-map = random_map.RandomMap()
+map = random_map.IdealMap()
 
 ax = plt.gca()
 ax.set_xlim([0, map.size])

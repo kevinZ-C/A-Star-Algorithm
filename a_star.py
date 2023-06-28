@@ -58,7 +58,7 @@ class AStar:
 
     def SaveImage(self, plt):
         millis = int(round(time.time() * 1000))
-        filename = './' + str(millis) + '.png'
+        filename = './Results/' + str(millis) + '.png'
         plt.savefig(filename)
 
     def ProcessPoint(self, x, y, parent):
@@ -97,7 +97,8 @@ class AStar:
             rec = Rectangle((p.x, p.y), 1, 1, color='g')
             ax.add_patch(rec)
             plt.draw()
-            self.SaveImage(plt)
+
+        self.SaveImage(plt)
         end_time = time.time()
         print('===== Algorithm finish in', int(end_time-start_time), ' seconds')
 
@@ -112,13 +113,15 @@ class AStar:
             index = self.SelectPointInOpenList()
             if index < 0:
                 print('No path found, algorithm failed!!!')
+                self.SaveImage(plt)
                 return
+
             p = self.open_set[index]
             rec = Rectangle((p.x, p.y), 1, 1, color='c')
             ax.add_patch(rec)
-            self.SaveImage(plt)
 
             if self.IsEndPoint(p):
+                self.SaveImage(plt)
                 return self.BuildPath(p, ax, plt, start_time)
 
             del self.open_set[index]
