@@ -4,41 +4,31 @@ import numpy as np
 
 import point
 
-class RandomMap:
-    def __init__(self, size=50):
+
+class IdealMap:
+    def __init__(self, size=20):
         self.size = size
-        self.obstacle = size//8
+        self.obstacle = 25
         self.GenerateObstacle()
 
     def GenerateObstacle(self):
         self.obstacle_point = []
-        self.obstacle_point.append(point.Point(self.size//2, self.size//2))
-        self.obstacle_point.append(point.Point(self.size//2, self.size//2-1))
+        grid_size = self.size // 5  # 将地图划分为5*5个大方格
 
+        # 生成25个大方格的中心点
+        grid_centers = [(i * grid_size + grid_size // 2, j * grid_size + grid_size // 2)
+                        for i in range(5) for j in range(5)]
 
-        # Generate an obstacle in the middle
-        for i in range(self.size//2-4, self.size//2):
-            self.obstacle_point.append(point.Point(i, self.size-i))
-            self.obstacle_point.append(point.Point(i, self.size-i-1))
-            self.obstacle_point.append(point.Point(self.size-i, i))
-            self.obstacle_point.append(point.Point(self.size-i, i-1))
+        # 在25个大方格中随机选取10个生成障碍
+        selected_centers = np.random.choice(range(25), size=self.obstacle, replace=False)
+        for center_index in selected_centers:
+            x, y = grid_centers[center_index]
+            for dx in range(-1, 1):  # 生成2*2的障碍
+                for dy in range(-1, 1):
+                    self.obstacle_point.append(point.Point(x + dx, y + dy))
 
-        for i in range(self.obstacle-1):
-            x = np.random.randint(0, self.size)
-            y = np.random.randint(0, self.size)
-            self.obstacle_point.append(point.Point(x, y))
-
-            if (np.random.rand() > 0.5): # Random boolean
-                for l in range(self.size//4):
-                    self.obstacle_point.append(point.Point(x, y+l))
-                    pass
-            else:
-                for l in range(self.size//4):
-                    self.obstacle_point.append(point.Point(x+l, y))
-                    pass
-
-    def IsObstacle(self, i ,j):
+    def IsObstacle(self, i, j):
         for p in self.obstacle_point:
-            if i==p.x and j==p.y:
+            if i == p.x and j == p.y:
                 return True
         return False
